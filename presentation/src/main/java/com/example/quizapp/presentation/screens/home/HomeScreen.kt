@@ -93,12 +93,12 @@ fun HomeScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        containerColor = DarkBackground,
+        containerColor = MaterialTheme.colorScheme.background,
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 onClick = onQuickStartQuiz,
-                containerColor = PrimaryPurple,
-                contentColor = Color.White,
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
                 shape = RoundedCornerShape(18.dp),
                 icon = { Icon(Icons.Default.PlayArrow, contentDescription = "Quick Start") },
                 text = { Text("Quick Quiz", fontWeight = FontWeight.Bold) }
@@ -112,7 +112,7 @@ fun HomeScreen(
                     .padding(innerPadding),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator(color = PrimaryPurple)
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
             }
         } else {
             Column(
@@ -167,13 +167,13 @@ fun HomeScreen(
                             text = "Quiz Categories",
                             style = MaterialTheme.typography.titleLarge.copy(
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = MaterialTheme.colorScheme.onBackground
                             )
                         )
                         Text(
                             text = "${uiState.filteredCategories.size} Available",
                             style = MaterialTheme.typography.bodySmall.copy(
-                                color = Color.White.copy(alpha = 0.6f)
+                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
                             )
                         )
                     }
@@ -190,7 +190,7 @@ fun HomeScreen(
                         ) {
                             Text(
                                 text = "No categories found for '${uiState.searchQuery}'",
-                                color = Color.White.copy(alpha = 0.7f),
+                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         }
@@ -220,7 +220,7 @@ fun HomeScreen(
 private fun UserHeaderSection(stats: UserStats?) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        color = DarkSurface,
+        color = MaterialTheme.colorScheme.surface,
         shadowElevation = 4.dp
     ) {
         Row(
@@ -235,14 +235,14 @@ private fun UserHeaderSection(stats: UserStats?) {
                 Surface(
                     modifier = Modifier.size(48.dp),
                     shape = CircleShape,
-                    color = PrimaryPurple
+                    color = MaterialTheme.colorScheme.primary
                 ) {
                     Box(contentAlignment = Alignment.Center) {
                         Text(
                             text = stats?.username?.firstOrNull()?.toString() ?: "U",
                             style = MaterialTheme.typography.titleLarge.copy(
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = MaterialTheme.colorScheme.onPrimary
                             )
                         )
                     }
@@ -255,13 +255,13 @@ private fun UserHeaderSection(stats: UserStats?) {
                         text = "Hello, ${stats?.username ?: "Explorer"}! 👋",
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Bold,
-                            color = Color.White
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     )
                     Text(
                         text = "Level ${stats?.level ?: 1} • Master",
                         style = MaterialTheme.typography.bodySmall.copy(
-                            color = SecondaryCyan
+                            color = MaterialTheme.colorScheme.primary
                         )
                     )
                 }
@@ -346,9 +346,8 @@ private fun DailyChallengeBanner(
                 .background(
                     Brush.horizontalGradient(
                         colors = listOf(
-                            PrimaryPurple,
-                            Color(0xFF3B27B2),
-                            SecondaryCyan
+                            MaterialTheme.colorScheme.primary,
+                            MaterialTheme.colorScheme.secondary
                         )
                     )
                 )
@@ -420,8 +419,8 @@ private fun DailyChallengeBanner(
                 Button(
                     onClick = onStart,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = AccentOrange,
-                        contentColor = Color.White
+                        containerColor = MaterialTheme.colorScheme.tertiary,
+                        contentColor = MaterialTheme.colorScheme.onTertiary
                     ),
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier.align(Alignment.End)
@@ -451,14 +450,14 @@ private fun SearchBarSection(
         placeholder = {
             Text(
                 "Search quiz categories...",
-                color = Color.White.copy(alpha = 0.5f)
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
             )
         },
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Search,
                 contentDescription = "Search",
-                tint = SecondaryCyan
+                tint = MaterialTheme.colorScheme.primary
             )
         },
         trailingIcon = {
@@ -467,7 +466,7 @@ private fun SearchBarSection(
                     Icon(
                         imageVector = Icons.Default.Clear,
                         contentDescription = "Clear search",
-                        tint = Color.White.copy(alpha = 0.7f)
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
                     )
                 }
             }
@@ -475,12 +474,12 @@ private fun SearchBarSection(
         singleLine = true,
         shape = RoundedCornerShape(16.dp),
         colors = OutlinedTextFieldDefaults.colors(
-            focusedContainerColor = DarkSurfaceCard,
-            unfocusedContainerColor = DarkSurfaceCard,
-            focusedBorderColor = PrimaryPurple,
+            focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+            focusedBorderColor = MaterialTheme.colorScheme.primary,
             unfocusedBorderColor = Color.Transparent,
-            focusedTextColor = Color.White,
-            unfocusedTextColor = Color.White
+            focusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            unfocusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
         )
     )
 }
@@ -509,16 +508,16 @@ private fun FilterChipsSection(
                 },
                 shape = RoundedCornerShape(12.dp),
                 colors = FilterChipDefaults.filterChipColors(
-                    containerColor = DarkSurfaceCard,
-                    labelColor = Color.White.copy(alpha = 0.7f),
-                    selectedContainerColor = PrimaryPurple,
-                    selectedLabelColor = Color.White
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    labelColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+                    selectedContainerColor = MaterialTheme.colorScheme.primary,
+                    selectedLabelColor = MaterialTheme.colorScheme.onPrimary
                 ),
                 border = FilterChipDefaults.filterChipBorder(
                     enabled = true,
                     selected = isSelected,
                     borderColor = Color.Transparent,
-                    selectedBorderColor = SecondaryCyan
+                    selectedBorderColor = MaterialTheme.colorScheme.secondary
                 )
             )
         }
@@ -548,7 +547,7 @@ private fun QuizCategoryCard(
             .clickable { onClick() },
         shape = RoundedCornerShape(18.dp),
         colors = CardDefaults.elevatedCardColors(
-            containerColor = DarkSurfaceCard
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
     ) {
@@ -607,7 +606,7 @@ private fun QuizCategoryCard(
                 text = category.title,
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.Bold,
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 15.sp
                 ),
                 maxLines = 1
@@ -619,7 +618,7 @@ private fun QuizCategoryCard(
             Text(
                 text = "${category.totalQuestions} Questions",
                 style = MaterialTheme.typography.bodySmall.copy(
-                    color = Color.White.copy(alpha = 0.6f)
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
                 )
             )
 
@@ -633,7 +632,7 @@ private fun QuizCategoryCard(
                     .height(5.dp)
                     .clip(CircleShape),
                 color = cardColor,
-                trackColor = Color.White.copy(alpha = 0.1f)
+                trackColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.15f)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -646,7 +645,7 @@ private fun QuizCategoryCard(
                 Text(
                     text = "${(category.progressPercentage * 100).toInt()}% Done",
                     style = MaterialTheme.typography.labelSmall.copy(
-                        color = Color.White.copy(alpha = 0.5f)
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                     )
                 )
                 Text(

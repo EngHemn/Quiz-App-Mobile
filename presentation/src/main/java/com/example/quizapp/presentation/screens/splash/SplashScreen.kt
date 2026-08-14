@@ -41,10 +41,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.quizapp.presentation.theme.AccentGold
-import com.example.quizapp.presentation.theme.DarkBackground
-import com.example.quizapp.presentation.theme.PrimaryPurple
-import com.example.quizapp.presentation.theme.SecondaryCyan
 import kotlinx.coroutines.delay
 
 @Composable
@@ -85,9 +81,9 @@ fun SplashScreen(
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(
-                        DarkBackground,
-                        Color(0xFF161233),
-                        DarkBackground
+                        MaterialTheme.colorScheme.background,
+                        MaterialTheme.colorScheme.surfaceVariant,
+                        MaterialTheme.colorScheme.background
                     )
                 )
             ),
@@ -105,7 +101,7 @@ fun SplashScreen(
                     .alpha(alpha.value)
                     .size(110.dp),
                 shape = RoundedCornerShape(28.dp),
-                color = PrimaryPurple,
+                color = MaterialTheme.colorScheme.primary,
                 tonalElevation = 12.dp,
                 shadowElevation = 16.dp
             ) {
@@ -116,8 +112,8 @@ fun SplashScreen(
                         .background(
                             Brush.linearGradient(
                                 colors = listOf(
-                                    PrimaryPurple,
-                                    SecondaryCyan
+                                    MaterialTheme.colorScheme.primary,
+                                    MaterialTheme.colorScheme.secondary
                                 )
                             )
                         )
@@ -141,7 +137,7 @@ fun SplashScreen(
                     fontSize = 32.sp,
                     letterSpacing = 2.sp
                 ),
-                color = Color.White,
+                color = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.alpha(alpha.value)
             )
 
@@ -153,7 +149,7 @@ fun SplashScreen(
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontWeight = FontWeight.Medium
                 ),
-                color = Color.White.copy(alpha = 0.7f),
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
                 textAlign = TextAlign.Center,
                 modifier = Modifier.alpha(alpha.value)
             )
@@ -167,8 +163,8 @@ fun SplashScreen(
                     .height(6.dp)
                     .clip(CircleShape)
                     .alpha(alpha.value),
-                color = AccentGold,
-                trackColor = Color.White.copy(alpha = 0.15f)
+                color = MaterialTheme.colorScheme.tertiary,
+                trackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)
             )
         }
     }

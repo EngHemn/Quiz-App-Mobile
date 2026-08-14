@@ -10,54 +10,41 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
-private val DarkColorScheme = darkColorScheme(
-    primary = PrimaryPurple,
-    onPrimary = TextPrimaryDark,
-    primaryContainer = DarkSurfaceCard,
-    onPrimaryContainer = PrimaryPurpleLight,
-    secondary = SecondaryCyan,
-    onSecondary = TextPrimaryDark,
-    tertiary = AccentOrange,
-    background = DarkBackground,
-    onBackground = TextPrimaryDark,
-    surface = DarkSurface,
-    onSurface = TextPrimaryDark,
-    surfaceVariant = DarkSurfaceCard,
-    onSurfaceVariant = TextSecondaryDark,
-    outline = DarkSurfaceBorder
+private val LightColorScheme = lightColorScheme(
+    primary = LightPrimary,
+    onPrimary = LightOnPrimary,
+    primaryContainer = LightPrimaryContainer,
+    onPrimaryContainer = LightOnPrimaryContainer,
+    secondary = LightSecondary,
+    onSecondary = LightOnSecondary,
+    secondaryContainer = LightSecondaryContainer,
+    onSecondaryContainer = LightOnSecondaryContainer,
+    tertiary = LightTertiary,
+    onTertiary = LightOnTertiary,
+    tertiaryContainer = LightTertiaryContainer,
+    onTertiaryContainer = LightOnTertiaryContainer,
+    error = LightError,
+    onError = LightOnError,
+    errorContainer = LightErrorContainer,
+    onErrorContainer = LightOnErrorContainer,
+    background = LightBackground,
+    onBackground = LightOnBackground,
+    surface = LightSurface,
+    onSurface = LightOnSurface,
+    surfaceVariant = LightSurfaceVariant,
+    onSurfaceVariant = LightOnSurfaceVariant,
+    outline = LightOutline
 )
 
-private val LightColorScheme = lightColorScheme(
-    primary = PrimaryPurple,
-    onPrimary = TextPrimaryDark,
-    primaryContainer = LightSurfaceCard,
-    onPrimaryContainer = PrimaryPurple,
-    secondary = SecondaryCyan,
-    onSecondary = TextPrimaryLight,
-    tertiary = AccentOrange,
-    background = LightBackground,
-    onBackground = TextPrimaryLight,
-    surface = LightSurface,
-    onSurface = TextPrimaryLight,
-    surfaceVariant = LightSurfaceCard,
-    onSurfaceVariant = TextSecondaryLight,
-    outline = LightSurfaceBorder
-)
+private val DarkColorScheme = LightColorScheme
 
 @Composable
 fun QuizAppTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = false, // Default to custom tailored dark/light theme
+    darkTheme: Boolean = false,
+    dynamicColor: Boolean = false, // Ignore dynamic/dark values to force Light Mode
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
+    val colorScheme = LightColorScheme
 
     MaterialTheme(
         colorScheme = colorScheme,

@@ -21,7 +21,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.quizapp.presentation.screens.home.HomeScreen
 import com.example.quizapp.presentation.screens.splash.SplashScreen
-import com.example.quizapp.presentation.theme.DarkBackground
 import com.example.quizapp.presentation.viewmodels.HomeViewModel
 
 @Composable
@@ -85,7 +84,7 @@ private fun QuizPlayPlaceholderScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(DarkBackground)
+            .background(MaterialTheme.colorScheme.background)
             .padding(24.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -93,7 +92,7 @@ private fun QuizPlayPlaceholderScreen(
             text = "Quiz Game Ready!\nCategory ID: $categoryId",
             style = MaterialTheme.typography.headlineMedium.copy(
                 fontWeight = FontWeight.Bold,
-                color = Color.White
+                color = MaterialTheme.colorScheme.onBackground
             )
         )
     }
