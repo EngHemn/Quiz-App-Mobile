@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.quizapp.domain.model.DailyChallenge
 import com.example.quizapp.domain.model.QuizCategory
 import com.example.quizapp.domain.model.UserStats
+import com.example.quizapp.domain.repository.AuthRepository
 import com.example.quizapp.presentation.uistate.HomeUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,26 +16,58 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor() : ViewModel() {
+class HomeViewModel @Inject constructor(
+    private val authRepository: AuthRepository
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
     init {
+        observeAuthState()
         loadHomeData()
+    }
+
+    private fun observeAuthState() {
+        viewModelScope.launch {
+            authRepository.observeAuthState().collect { currentUser ->
+                val username = currentUser?.displayName ?: currentUser?.email?.substringBefore("@") ?: "Explorer"
+                val photoUrl = currentUser?.photoUrl
+                _uiState.update { state ->
+                    val updatedStats = state.userStats?.copy(
+                        username = username,
+                        avatarUrl = photoUrl
+                    ) ?: UserStats(
+                        username = username,
+                        totalXp = 2450,
+                        streakDays = 5,
+                        quizzesCompleted = 18,
+                        accuracyPercentage = 88,
+                        level = 7,
+                        avatarUrl = photoUrl
+                    )
+                    state.copy(userStats = updatedStats)
+                }
+            }
+        }
     }
 
     private fun loadHomeData() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
 
+            val currentUser = authRepository.getCurrentUser()
+            val username = currentUser?.displayName ?: currentUser?.email?.substringBefore("@") ?: "Explorer"
+            val photoUrl = currentUser?.photoUrl
+
             val mockUserStats = UserStats(
-                username = "Alex River",
+                username = username,
                 totalXp = 2450,
                 streakDays = 5,
                 quizzesCompleted = 18,
                 accuracyPercentage = 88,
-                level = 7
+                level = 7,
+                avatarUrl = photoUrl
             )
 
             val mockDailyChallenge = DailyChallenge(
@@ -154,5 +187,12 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         }
 
         return state.copy(filteredCategories = filtered)
+    }
+
+    fun signOut(onSignedOut: () -> Unit) {
+        viewModelScope.launch {
+            authRepository.signOut()
+            onSignedOut()
+        }
     }
 }

@@ -38,6 +38,8 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.SportsSoccer
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Whatshot
+import androidx.compose.material.icons.filled.ExitToApp
+import coil.compose.AsyncImage
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -66,6 +68,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -87,7 +90,8 @@ fun HomeScreen(
     viewModel: HomeViewModel,
     onCategorySelected: (String) -> Unit,
     onStartDailyChallenge: (String) -> Unit,
-    onQuickStartQuiz: () -> Unit
+    onQuickStartQuiz: () -> Unit,
+    onSignOutClick: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -121,7 +125,10 @@ fun HomeScreen(
                     .padding(innerPadding)
             ) {
                 // Top Header Section
-                UserHeaderSection(stats = uiState.userStats)
+                UserHeaderSection(
+                    stats = uiState.userStats,
+                    onSignOutClick = onSignOutClick
+                )
 
                 // Scrollable Content
                 Column(
@@ -217,7 +224,10 @@ fun HomeScreen(
 }
 
 @Composable
-private fun UserHeaderSection(stats: UserStats?) {
+private fun UserHeaderSection(
+    stats: UserStats?,
+    onSignOutClick: () -> Unit
+) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
         color = MaterialTheme.colorScheme.surface,
@@ -232,19 +242,30 @@ private fun UserHeaderSection(stats: UserStats?) {
         ) {
             // User Greeting & Avatar
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Surface(
-                    modifier = Modifier.size(48.dp),
-                    shape = CircleShape,
-                    color = MaterialTheme.colorScheme.primary
-                ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        Text(
-                            text = stats?.username?.firstOrNull()?.toString() ?: "U",
-                            style = MaterialTheme.typography.titleLarge.copy(
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onPrimary
+                if (!stats?.avatarUrl.isNullOrBlank()) {
+                    AsyncImage(
+                        model = stats.avatarUrl,
+                        contentDescription = "User Avatar",
+                        modifier = Modifier
+                            .size(48.dp)
+                            .clip(CircleShape),
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    Surface(
+                        modifier = Modifier.size(48.dp),
+                        shape = CircleShape,
+                        color = MaterialTheme.colorScheme.primary
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Text(
+                                text = stats?.username?.firstOrNull()?.toString() ?: "U",
+                                style = MaterialTheme.typography.titleLarge.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onPrimary
+                                )
                             )
-                        )
+                        }
                     }
                 }
 
@@ -267,7 +288,7 @@ private fun UserHeaderSection(stats: UserStats?) {
                 }
             }
 
-            // Stats Badges (XP & Streak)
+            // Stats Badges (XP & Streak) and Sign Out Button
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -324,6 +345,15 @@ private fun UserHeaderSection(stats: UserStats?) {
                             )
                         )
                     }
+                }
+
+                // Sign Out
+                IconButton(onClick = onSignOutClick) {
+                    Icon(
+                        imageVector = Icons.Default.ExitToApp,
+                        contentDescription = "Sign Out",
+                        tint = MaterialTheme.colorScheme.error
+                    )
                 }
             }
         }

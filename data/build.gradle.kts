@@ -52,9 +52,13 @@ dependencies {
     implementation(libs.datastore.preferences)
     implementation(libs.kotlinx.coroutines.android)
 
+    // Firebase Auth
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
+    implementation(libs.kotlinx.coroutines.play.services)
+
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
-    ksp(libs.hilt.android.compiler)
 
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.coil.compose)

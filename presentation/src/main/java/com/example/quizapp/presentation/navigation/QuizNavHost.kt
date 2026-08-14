@@ -21,10 +21,14 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.quizapp.presentation.screens.home.HomeScreen
 import com.example.quizapp.presentation.screens.splash.SplashScreen
+import com.example.quizapp.presentation.screens.login.LoginScreen
 import com.example.quizapp.presentation.viewmodels.HomeViewModel
+import com.example.quizapp.presentation.viewmodels.LoginViewModel
+import com.example.quizapp.domain.repository.AuthRepository
 
 @Composable
 fun QuizNavHost(
+    authRepository: AuthRepository,
     navController: NavHostController = rememberNavController(),
     startDestination: String = Screen.Splash.route
 ) {
@@ -36,8 +40,26 @@ fun QuizNavHost(
         composable(Screen.Splash.route) {
             SplashScreen(
                 onSplashFinished = {
-                    navController.navigate(Screen.Home.route) {
+                    val nextRoute = if (authRepository.getCurrentUser() != null) {
+                        Screen.Home.route
+                    } else {
+                        Screen.Login.route
+                    }
+                    navController.navigate(nextRoute) {
                         popUpTo(Screen.Splash.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        // Login Screen Route
+        composable(Screen.Login.route) {
+            val loginViewModel: LoginViewModel = hiltViewModel()
+            LoginScreen(
+                viewModel = loginViewModel,
+                onLoginSuccess = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Login.route) { inclusive = true }
                     }
                 }
             )
@@ -56,6 +78,13 @@ fun QuizNavHost(
                 },
                 onQuickStartQuiz = {
                     navController.navigate(Screen.QuizPlay.createRoute("random_quick"))
+                },
+                onSignOutClick = {
+                    homeViewModel.signOut {
+                        navController.navigate(Screen.Login.route) {
+                            popUpTo(Screen.Home.route) { inclusive = true }
+                        }
+                    }
                 }
             )
         }

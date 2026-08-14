@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "871814162415",
+    "project_id": "tech-hiem",
+    "storage_bucket": "tech-hiem.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:871814162415:android:a8d98586dada221703381a",
+        "android_client_info": {
+          "package_name": "com.example.ECommerce"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "871814162415-r5te04nrm2nqegpis7079vikrke0gl5g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCW0WutqbeRpCPvBNTCkosIYD6n4QgrCqI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "871814162415-r5te04nrm2nqegpis7079vikrke0gl5g.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "871814162415-2llr1jpn528d2jnm5hm2iehmk3gulcd5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "techapp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:871814162415:android:ad36f1767eb8ab9103381a",
+        "android_client_info": {
+          "package_name": "com.example.quizapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "871814162415-2n20q3139gbsgf7oak7i9eo64nt493ub.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.quizapp",
+            "certificate_hash": "10ad36746b274005c325e6426ebde853b2535b42"
+          }
+        },
+        {
+          "client_id": "871814162415-r5te04nrm2nqegpis7079vikrke0gl5g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCW0WutqbeRpCPvBNTCkosIYD6n4QgrCqI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "871814162415-r5te04nrm2nqegpis7079vikrke0gl5g.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "871814162415-2llr1jpn528d2jnm5hm2iehmk3gulcd5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "techapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
