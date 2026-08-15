@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.QuizApp" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.QuizApp" parent="android:Theme.Material.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="android:statusBarColor">#7B561A</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
 </resources>

@@ -75,6 +75,7 @@ import androidx.compose.ui.unit.sp
 import com.example.quizapp.domain.model.DailyChallenge
 import com.example.quizapp.domain.model.QuizCategory
 import com.example.quizapp.domain.model.UserStats
+import com.example.quizapp.presentation.components.AppTopBarComponent
 import com.example.quizapp.presentation.theme.AccentGold
 import com.example.quizapp.presentation.theme.AccentOrange
 import com.example.quizapp.presentation.theme.AccentOrangeFlame
@@ -84,7 +85,9 @@ import com.example.quizapp.presentation.theme.DarkSurfaceCard
 import com.example.quizapp.presentation.theme.PrimaryPurple
 import com.example.quizapp.presentation.theme.SecondaryCyan
 import com.example.quizapp.presentation.viewmodels.HomeViewModel
+import kotlin.OptIn
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel,
@@ -98,12 +101,19 @@ fun HomeScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
+        topBar = {
+            AppTopBarComponent(
+                stats = uiState.userStats,
+                onSignOutClick = onSignOutClick
+            )
+        },
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 onClick = onQuickStartQuiz,
+                modifier = Modifier.padding(bottom = 52.dp),
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary,
-                shape = RoundedCornerShape(18.dp),
+                shape = RoundedCornerShape(28.dp),
                 icon = { Icon(Icons.Default.PlayArrow, contentDescription = "Quick Start") },
                 text = { Text("Quick Quiz", fontWeight = FontWeight.Bold) }
             )
@@ -123,237 +133,88 @@ fun HomeScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
+                    .padding(horizontal = 16.dp)
             ) {
-                // Top Header Section
-                UserHeaderSection(
-                    stats = uiState.userStats,
-                    onSignOutClick = onSignOutClick
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // Daily Challenge Banner
+                uiState.dailyChallenge?.let { challenge ->
+                    DailyChallengeBanner(
+                        challenge = challenge,
+                        onStart = { onStartDailyChallenge(challenge.id) }
+                    )
+                    Spacer(modifier = Modifier.height(20.dp))
+                }
+
+                // Search Bar
+                SearchBarSection(
+                    query = uiState.searchQuery,
+                    onQueryChanged = viewModel::onSearchQueryChanged
                 )
 
-                // Scrollable Content
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 16.dp)
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // Category Filter Chips
+                FilterChipsSection(
+                    chips = uiState.availableFilterChips,
+                    selectedChip = uiState.selectedFilterChip,
+                    onChipSelected = viewModel::onFilterChipSelected
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Categories Grid Section Title
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    // Daily Challenge Banner
-                    uiState.dailyChallenge?.let { challenge ->
-                        DailyChallengeBanner(
-                            challenge = challenge,
-                            onStart = { onStartDailyChallenge(challenge.id) }
-                        )
-                        Spacer(modifier = Modifier.height(20.dp))
-                    }
-
-                    // Search Bar
-                    SearchBarSection(
-                        query = uiState.searchQuery,
-                        onQueryChanged = viewModel::onSearchQueryChanged
-                    )
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    // Category Filter Chips
-                    FilterChipsSection(
-                        chips = uiState.availableFilterChips,
-                        selectedChip = uiState.selectedFilterChip,
-                        onChipSelected = viewModel::onFilterChipSelected
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // Categories Grid Section Title
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "Quiz Categories",
-                            style = MaterialTheme.typography.titleLarge.copy(
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onBackground
-                            )
-                        )
-                        Text(
-                            text = "${uiState.filteredCategories.size} Available",
-                            style = MaterialTheme.typography.bodySmall.copy(
-                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
-                            )
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    // Quiz Categories Grid
-                    if (uiState.filteredCategories.isEmpty()) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 40.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = "No categories found for '${uiState.searchQuery}'",
-                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                        }
-                    } else {
-                        LazyVerticalGrid(
-                            columns = GridCells.Fixed(2),
-                            horizontalArrangement = Arrangement.spacedBy(12.dp),
-                            verticalArrangement = Arrangement.spacedBy(12.dp),
-                            contentPadding = PaddingValues(bottom = 80.dp),
-                            modifier = Modifier.fillMaxSize()
-                        ) {
-                            items(uiState.filteredCategories, key = { it.id }) { category ->
-                                QuizCategoryCard(
-                                    category = category,
-                                    onClick = { onCategorySelected(category.id) }
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun UserHeaderSection(
-    stats: UserStats?,
-    onSignOutClick: () -> Unit
-) {
-    Surface(
-        modifier = Modifier.fillMaxWidth(),
-        color = MaterialTheme.colorScheme.surface,
-        shadowElevation = 4.dp
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // User Greeting & Avatar
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                if (!stats?.avatarUrl.isNullOrBlank()) {
-                    AsyncImage(
-                        model = stats.avatarUrl,
-                        contentDescription = "User Avatar",
-                        modifier = Modifier
-                            .size(48.dp)
-                            .clip(CircleShape),
-                        contentScale = ContentScale.Crop
-                    )
-                } else {
-                    Surface(
-                        modifier = Modifier.size(48.dp),
-                        shape = CircleShape,
-                        color = MaterialTheme.colorScheme.primary
-                    ) {
-                        Box(contentAlignment = Alignment.Center) {
-                            Text(
-                                text = stats?.username?.firstOrNull()?.toString() ?: "U",
-                                style = MaterialTheme.typography.titleLarge.copy(
-                                    fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.onPrimary
-                                )
-                            )
-                        }
-                    }
-                }
-
-                Spacer(modifier = Modifier.width(12.dp))
-
-                Column {
                     Text(
-                        text = "Hello, ${stats?.username ?: "Explorer"}! 👋",
-                        style = MaterialTheme.typography.titleMedium.copy(
+                        text = "Quiz Categories",
+                        style = MaterialTheme.typography.titleLarge.copy(
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     )
                     Text(
-                        text = "Level ${stats?.level ?: 1} • Master",
+                        text = "${uiState.filteredCategories.size} Available",
                         style = MaterialTheme.typography.bodySmall.copy(
-                            color = MaterialTheme.colorScheme.primary
+                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
                         )
                     )
                 }
-            }
 
-            // Stats Badges (XP & Streak) and Sign Out Button
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Streak Badge
-                Surface(
-                    shape = RoundedCornerShape(14.dp),
-                    color = AccentOrangeFlame.copy(alpha = 0.2f),
-                    border = androidx.compose.foundation.BorderStroke(1.dp, AccentOrangeFlame.copy(alpha = 0.5f))
-                ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // Quiz Categories Grid
+                if (uiState.filteredCategories.isEmpty()) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 40.dp),
+                        contentAlignment = Alignment.Center
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Whatshot,
-                            contentDescription = "Streak",
-                            tint = AccentOrangeFlame,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = "${stats?.streakDays ?: 0}d",
-                            style = MaterialTheme.typography.labelMedium.copy(
-                                fontWeight = FontWeight.ExtraBold,
-                                color = AccentOrangeFlame
-                            )
+                            text = "No categories found for '${uiState.searchQuery}'",
+                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
+                            style = MaterialTheme.typography.bodyMedium
                         )
                     }
-                }
-
-                // XP Badge
-                Surface(
-                    shape = RoundedCornerShape(14.dp),
-                    color = AccentGold.copy(alpha = 0.2f),
-                    border = androidx.compose.foundation.BorderStroke(1.dp, AccentGold.copy(alpha = 0.5f))
-                ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                } else {
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(2),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                        contentPadding = PaddingValues(bottom = 80.dp),
+                        modifier = Modifier.fillMaxSize()
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Star,
-                            contentDescription = "XP",
-                            tint = AccentGold,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            text = "${stats?.totalXp ?: 0}",
-                            style = MaterialTheme.typography.labelMedium.copy(
-                                fontWeight = FontWeight.ExtraBold,
-                                color = AccentGold
+                        items(uiState.filteredCategories, key = { it.id }) { category ->
+                            QuizCategoryCard(
+                                category = category,
+                                onClick = { onCategorySelected(category.id) }
                             )
-                        )
+                        }
                     }
-                }
-
-                // Sign Out
-                IconButton(onClick = onSignOutClick) {
-                    Icon(
-                        imageVector = Icons.Default.ExitToApp,
-                        contentDescription = "Sign Out",
-                        tint = MaterialTheme.colorScheme.error
-                    )
                 }
             }
         }
