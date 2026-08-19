@@ -253,7 +253,7 @@ fun AppTopBarComponent(
             titleContentColor = contentColor,
             navigationIconContentColor = contentColor,
             actionIconContentColor = contentColor
-        ),
+        ), //  colors of top app bar by default it's white 
         scrollBehavior = scrollBehavior,
 //        windowInsets = windowInsets
     )
