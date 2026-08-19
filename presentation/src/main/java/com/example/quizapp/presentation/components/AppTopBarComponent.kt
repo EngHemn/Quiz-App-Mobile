@@ -124,10 +124,6 @@ fun AppTopBarComponent(
     )
 }
 
-/**
- * TopBar component using Material 3 TopAppBar specifically for screens displaying user statistics,
- * avatar, level, streak, XP, and actions (e.g. HomeScreen).
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppTopBarComponent(
